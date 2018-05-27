@@ -19,7 +19,9 @@ class User():
     @classmethod
     def get_by_id(cls,_id):
         data= Database.find_one("user",{"_id" : _id})
-
+        if data is not None:
+            return cls(**data)
+        
     @staticmethod
     def login_valid(email,password):
         user = User.get_by_email(email)
