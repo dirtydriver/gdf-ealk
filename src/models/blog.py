@@ -6,7 +6,8 @@ from src.models.post import Post
 
 
 class Blog(object):
-    def __init__(self, author, title, description, _id=None):
+    def __init__(self, author, title, description,author_id, _id=None):
+        self.author_id=author_id
         self.author = author
         self.title = title
         self.description = description
@@ -30,6 +31,7 @@ class Blog(object):
 
     def json(self):
         return {
+            'author_id' : self.author_id,
             'author': self.author,
             'title': self.title,
             'description': self.description,
@@ -41,3 +43,9 @@ class Blog(object):
         blog_data = Database.find_one(collection='blogs',
                                       query={'_id': id})
         return cls(**blog_data)
+
+    @classmethod
+    def find_by_author_id(cls,author_id):
+        blogs = Database.find(collection='blogs',query={'author_id' : author_id})
+
+        return [cls(**blog) for blog in blogs]
