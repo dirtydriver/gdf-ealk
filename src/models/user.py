@@ -56,7 +56,7 @@ class User():
         return Blog.find_by_author_id(self._id)
 
 
-    def new_blog(self,,title,description):
+    def new_blog(self,title,description):
         blog=Blog(author=self.email,
                   title=title,
                   description=description,
