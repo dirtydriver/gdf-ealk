@@ -11,7 +11,7 @@ class User():
     def __init__(self,email,password,_id=None):
         self.email=email
         self.password=password
-        self._id= uuid.uuid4().hex if id is None else _id
+        self._id= uuid.uuid4().hex  if _id is None else _id
 
     @classmethod
     def get_by_email(cls,email):
@@ -73,7 +73,7 @@ class User():
         return {
             "email" : self.email,
             "_id" : self._id,
-            "passowrd" : self.password
+            "password" : self.password
         }
 
     def save_to_mongo(self):
