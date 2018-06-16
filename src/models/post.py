@@ -13,7 +13,7 @@ class Post(object):
         self.content = content
         self.author = author
         self.created_date = created_date
-        self._id = uuid.uuid4().hex if id is None else _id
+        self._id = uuid.uuid4().hex if _id is None else _id
 
     def save_to_mongo(self):
         Database.insert(collection='posts',
