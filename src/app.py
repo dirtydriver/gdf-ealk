@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, make_response
+from flask import Flask, render_template, request, session, make_response, redirect
 
 from src.common.database import Database
 from src.models.blog import Blog
@@ -8,6 +8,9 @@ from src.models.user import User
 app=Flask(__name__)
 app.secret_key="AtiAkos"
 
+@app.route('/')
+def root():
+    return make_response(login_template())
 @app.route('/login')
 def login_template():
     return render_template('login.html')
@@ -20,6 +23,10 @@ def register_template():
 def initialize_database():
     Database.initialize()
 
+@app.route('/register_unknown')
+def register_unknown():
+    return render_template('register_unknown.html')
+
 @app.route('/auth/login',methods=['POST'])
 def login_user():
     email=request.form['email']
@@ -27,9 +34,10 @@ def login_user():
 
     if User.login_valid(email,password):
         User.login(email)
-        return render_template('profile.html', email=session['email'])
+        return redirect('blogs')
     else:
-        return "Invalid Login"
+        session.clear()
+        return redirect('register_unknown')
 
 @app.route('/auth/register',methods=['POST'])
 def register_user():
@@ -37,7 +45,7 @@ def register_user():
     password = request.form['password']
 
     User.register(email,password)
-    return render_template('profile.html', email=session['email'])
+    return render_template('user_blogs.html', email=session['email'])
 
 @app.route('/blogs/<string:user_id>')
 @app.route('/blogs')
@@ -50,7 +58,7 @@ def user_blogs(user_id=None):
 
     return render_template('user_blogs.html', blogs=blogs ,email=user.email)
 
-@app.route('/blogs/new', methods=['POST','GET'])
+@app.route('/blogs/new/', methods=['POST','GET'])
 def create_new_blog():
     if request.method == 'GET':
         return render_template('new_blog.html')
